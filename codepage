@@ -1,0 +1,242 @@
+import React, { useState } from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Image,
+  View,
+
+} from 'react-native';
+
+
+
+const API_URL = 'http://lottery.11arena.com/api/draw-api';
+const JODI_API_URL = 'http://lottery.11arena.com/api/draw-api?type=jodi';
+
+function App(): React.JSX.Element {
+
+
+  const [data, setData] = useState<any[]>([]);
+
+  const fetchData = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      const jsonData = await response.json();
+      setData(jsonData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleSingleButtonClick = () => {
+    fetchData(API_URL);
+  };
+
+  const handleJodiButtonClick = () => {
+    fetchData(JODI_API_URL);
+  };
+
+
+
+  return (
+    <SafeAreaView style={[{ flex: 1 }]}>
+      <View style={styles.header}>
+        <Text style={styles.title}>NPL SINGLE</Text>
+        <View style={styles.options}>
+          <Image style={styles.icons} source={require('./src/share.png')} />
+          <Image style={styles.icons} source={require('./src/bell.png')} />
+          <Image style={styles.icons} source={require('./src/option.png')} />
+        </View>
+      </View>
+      <View style={styles.calender}>
+        <Text>
+          Space for calender input        </Text>
+        <View>
+
+        </View>
+      </View>
+      <View style={styles.tableHeader}>
+        <Text style={styles.text}>TIME</Text>
+        <Text style={styles.text}>A</Text>
+        <Text style={styles.text}>B</Text>
+        <Text style={styles.text}>C</Text>
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <View style={styles.container}>
+
+          {data.map((item, index) => (
+            <View key={index} style={styles.itemContainer}>
+              <Text style={styles.timeText}>{item.time}</Text>
+              <Text style={styles.groupText}>{item.group_a}</Text>
+              <Text style={styles.groupText}>{item.group_b}</Text>
+              <Text style={styles.groupText}>{item.group_c}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleSingleButtonClick}>
+          <Image style={styles.icons} source={require('./src/tick.png')} />
+          <Text style={styles.buttonText}>Single</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleJodiButtonClick}>
+          <Image style={styles.icons} source={require('./src/double.png')} />
+          <Text style={styles.buttonText}>Double</Text>
+        </TouchableOpacity>
+        <TouchableOpacity >
+          <Image style={styles.refreshIcons} source={require('./src/reload.png')} />
+          <Text style={styles.text}>REFRESH</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  scrollViewContainer: {
+    flexGrow: 1,
+  },
+  calender: {
+    borderColor: "#000",
+    borderWidth: 2,
+    marginTop: 4,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "red",
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+  },
+  title: {
+    fontSize: 25,
+    color: "#fff",
+  },
+  options: {
+    paddingVertical: 8,
+    gap: 5,
+    flexDirection: "row",
+  },
+  icons: {
+    height: 5,
+    width: 5,
+    marginLeft: 10,
+    marginBottom: 4,
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+  },
+  refreshIcons: {
+    height: 5,
+    width: 5,
+    marginLeft: 25,
+    marginBottom: 4,
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+  },
+  container: {
+    padding: 16,
+  },
+  itemContainer: {
+    marginBottom: 16,
+    flexDirection: "row",
+    backgroundColor: 'white',
+    justifyContent: "space-between",
+    padding: 12,
+    borderRadius: 8,
+    // columnGap:65,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'lightgray',
+    padding: 10,
+    marginTop: 15,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "bold",
+    paddingHorizontal: 15,
+  },
+  timeText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  groupText: {
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'lightgray',
+  },
+  button: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: 'grey',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
+
+export default App;
+
+
+
+///////////////////////////////
+{
+  "name": "Lottery",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "lint": "eslint .",
+    "start": "react-native start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@react-native-community/datetimepicker": "^7.7.0",
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/native-stack": "^6.9.26",
+    "react": "18.2.0",
+    "react-native": "0.73.7",
+    "react-native-date-picker": "^5.0.1",
+    "react-native-paper-dates": "^0.22.7",
+    "react-native-safe-area-context": "^4.9.0",
+    "react-native-screens": "^3.30.1",
+    "react-native-ui-datepicker": "^2.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "@babel/runtime": "^7.20.0",
+    "@react-native/babel-preset": "0.73.21",
+    "@react-native/eslint-config": "0.73.2",
+    "@react-native/metro-config": "0.73.5",
+    "@react-native/typescript-config": "0.73.1",
+    "@types/react": "^18.2.6",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-jest": "^29.6.3",
+    "eslint": "^8.19.0",
+    "jest": "^29.6.3",
+    "prettier": "2.8.8",
+    "react-test-renderer": "18.2.0",
+    "typescript": "5.0.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
